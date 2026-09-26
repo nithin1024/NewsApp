@@ -1,46 +1,78 @@
-from typing import Dict
-from app.core.config import settings
+from typing import Dict, List, Tuple
 
-# Comprehensive English to Telugu Financial & News Vocabulary Dictionary & Paragraph Translations
-TELUGU_FINANCIAL_DICT = {
-    "Indian Banking Stocks Rise After Strong Quarterly Financial Results":
-        (
-            "భారతీయ బ్యాంకింగ్ షేర్లు లాభపడ్డాయి",
-            "రకరకాల నికర వడ్డీ మార్జిన్ల విస్తరణ మరియు మెరుగైన ఆస్తుల నాణ్యత కారణంగా ప్రముఖ భారతీయ ప్రభుత్వ, ప్రైవేట్ రంగ బ్యాంకులు బలమైన త్రైమాసిక ఆదాయాలను నమోదు చేశాయి. పెట్టుబడిదారుల నుంచి సానుకూల స్పందన లభించింది."
-        ),
-    "NIFTY 50 Touches New High Powered by IT and Auto Rally":
-        (
-            "నిఫ్టీ 50 కొత్త రికార్డు స్థాయి",
-            "ఐటీ మరియు ఆటోమొబైల్ షేర్లలో సంస్థాగత పెట్టుబడిదారుల కొనుగోళ్ల మద్దతుతో బెంచ్‌మార్క్ సూచీ నిఫ్టీ 50 కీలక నిరోధక స్థాయిలను దాటి సరికొత్త గరిష్ట స్థాయిని తాకింది."
-        ),
-    "RBI Keeps Repo Rate Unchanged at 6.5 Percent Citing Inflation Targets":
-        "ఆర్‌బీఐ రెపో రేటు యథాతథం",
-    "Infosys Secures Major AI Transformation Deal Worth 1.5 Billion USD":
-        "ఇన్ఫోసిస్ భారీ ఏఐ డీల్",
-    "Reliance Industries Announces Major Expansion in Green Energy Manufacturing":
-        "గ్రీన్ ఎనర్జీ తయారీలో రిలయన్స్ భారీ విస్తరణ",
-    "Global Markets Trading Mix as US Fed Signals Cautious Rate Cuts":
-        "గ్లోబల్ మార్కెట్లలో మిశ్రమ ట్రేడింగ్",
-    "Crude oil prices fall on easing global demand concerns":
-        (
-            "క్రూడ్ ఆయిల్ ధరలు తగ్గాయి",
-            "ప్రపంచ డిమాండ్ ఆందోళనల నేపథ్యంలో అంతర్జాతీయ మార్కెట్లో క్రూడ్ ఆయిల్ ధరలు పడిపోయాయి. ప్రపంచ ఆర్థిక వృద్ధిపై ఉన్న ఆశంకర కారణంగా అంతర్జాతీయ మార్కెట్లలో క్రూడ్ ఆయిల్ ధరలు తగ్గుముఖం పట్టాయి."
-        ),
-    "RBI keeps repo rate unchanged at 6.50%":
-        (
-            "ఆర్‌బీఐ రెపో రేటును 6.50% వద్ద యథాతథంగా ఉంచింది",
-            "ద్రవ్యోల్బణాన్ని అదుపులో ఉంచుందుకు తీసుకుంటున్న చర్యల్లో భాగంగా ఆర్‌బీఐ వడ్డీ రేట్లను మార్చలేదు."
-        ),
-    "IT companies see strong deal pipeline in Q3":
-        (
-            "ఐటీ కంపెనీలకు క్యూ3లో బలమైన డీల్ పైప్‌లైన్ కనిపిస్తోంది",
-            "ప్రధాన ఐటీ కంపెనీలు ఈ త్రైమాసికంలో పెద్ద ఆర్డర్లతో ముందుకు వెళ్లే అవకాశం ఉందని నిపుణులు అంచనా వేస్తున్నారు."
-        ),
-    "US and allies discuss new steps on global trade":
-        (
-            "ప్రపంచ వాణిజ్యంపై అమెరికా ముదియు మిత్రదేశాలు కొత్త చర్యలపై చర్చ",
-            "అంతర్జాతీయ వాణిజ్య మార్గాలను మరింత పటిష్టం చేసేందుకు అమెరికా మరియు మిత్రదేశాలు ఉన్నత స్థాయి సమావేశాలు నిర్వహించాయి."
-        )
+RICH_NEWS_ANALYSIS = {
+    "Indian Banking Stocks Rise After Strong Quarterly Financial Results": {
+        "telugu_title": "బలమైన త్రైమాసిక ఫలితాల తర్వాత భారత బ్యాంకింగ్ షేర్లు లాభపడ్డాయి",
+        "telugu_summary": "రకరకాల నికర వడ్డీ మార్జిన్ల విస్తరణ మరియు మెరుగైన ఆస్తుల నాణ్యత కారణంగా ప్రముఖ భారతీయ ప్రభుత్వ, ప్రైవెట్ రంగ బ్యాంకులు బలమైన త్రైమాసిక ఆదాయాలను నమోదు చేశాయి. పెట్టుబడిదారుల నుంచి సానుకూల స్పందన లభించింది.",
+        "key_facts": [
+            "ప్రముఖ ప్రభుత్వ మరియు ప్రైవెట్ బ్యాంకుల త్రైమాసిక నికర లాభాలు వృద్ధి చెందాయి.",
+            "నికర వడ్డీ మార్జిన్లు (NIM) ఆశాజనకంగా ఉన్నాయి.",
+            "మొండి బకాయిలు (NPAs) మరింత తగ్గాయి."
+        ],
+        "why_it_matters": "బ్యాంకింగ్ రంగం దేశ ఆర్థిక వ్యవస్థకు వెన్నెముక లాంటిది. బ్యాంకుల ఫలితాలు బలపడటం మొత్తం స్టాక్ మార్కెట్‌కు ఊతమిస్తుంది.",
+        "market_impact": "Positive",
+        "market_impact_reason": "బలమైన త్రైమాసిక ఫలితాలు పెట్టుబడిదారుల నమ్మకాన్ని పెంచి బ్యాంకింగ్ షేర్లలో కొనుగోళ్ల జోరును పెంచుతాయి."
+    },
+    "NIFTY 50 Touches New High Powered by IT and Auto Rally": {
+        "telugu_title": "ఐటీ, ఆటో షేర్ల ర్యాలీతో నిఫ్టీ 50 కొత్త రికార్డు స్థాయి",
+        "telugu_summary": "ఐటీ మరియు ఆటోమొబైల్ షేర్లలో సంస్థాగత పెట్టుబడిదారుల కొనుగోళ్ల మద్దతుతో బెంచ్‌మార్క్ సూచీ నిఫ్టీ 50 కీలక నిరోధక స్థాయిలను దాటి సరికొత్త గరిష్ట స్థాయిని తాకింది.",
+        "key_facts": [
+            "నిఫ్టీ 50 సూచీ సరికొత్త ఆల్-టైమ్ హైని తాకింది.",
+            "విదేశీ సంస్థాగత పెట్టుబడిదారులు (FIIs) కొనుగోళ్లకు మొగ్గు చూపారు.",
+            "ఐటీ మరియు ఆటో రంగాల షేర్లు ప్రధాన డ్రైవర్లుగా నిలిచాయి."
+        ],
+        "why_it_matters": "మార్కెట్ గరిష్ట స్థాయికి చేరడం వలన బుల్ ట్రెండ్ కొనసాగుతున్నట్లు సూచిస్తుంది మరియు కొత్త మదుపర్లను ఆకర్షిస్తుంది.",
+        "market_impact": "Positive",
+        "market_impact_reason": "పెట్టుబడిదారుల సెంటిమెంట్ బలపడటంతో పాటు బలమైన కొనుగోలు ఒత్తిడి కనిపించింది."
+    },
+    "Global Markets Trading Mix as US Fed Signals Cautious Rate Cuts": {
+        "telugu_title": "అమెరికా ఫెడ్ వడ్డీ రేట్ల కోతపై జాగ్రత్త సంకేతాల మధ్య గ్లోబల్ మార్కెట్లలో మిశ్రమ ట్రేడింగ్",
+        "telugu_summary": "ఫెడరల్ రిజర్వ్ అధికారుల ప్రకటనల నేపథ్యంలో ఆసియా, యూరోపియన్ స్టాక్ సూచీలు మిశ్రమ ధోరణిని కనబరిచాయి. ద్రవ్యోల్బణ నియంత్రణపై ఫెడ్ దృష్టి సారించింది.",
+        "key_facts": [
+            "అమెరికా ఫెడరల్ రిజర్వ్ వడ్డీ రేట్ల తగ్గింపుపై వేచి చూసే ధోరణి అవలంబిస్తోంది.",
+            "యూరోపియన్ మరియు ఆసియా సూచీలు స్వల్ప లాభనష్టాలతో ముగిశాయి.",
+            "ద్రవ్యోల్బణ గణాంకాలు మార్కెట్ దిశను నిర్దేశిస్తున్నాయి."
+        ],
+        "why_it_matters": "అమెరికా ఫెడ్ నిర్ణయాలు గ్లోబల్ క్యాపిటల్ ఫ్లోస్ మరియు భారతీయ మార్కెట్లపై ప్రత్యక్ష ప్రభావం చూపుతాయి.",
+        "market_impact": "Neutral",
+        "market_impact_reason": "గ్లోబల్ మార్కెట్లలో స్పష్టమైన దిశ లేకపోవడంతో దేశీయ మార్కెట్లు కూడా అప్రమత్తంగా కదిలాయి."
+    },
+    "Infosys Secures Major AI Transformation Deal Worth 1.5 Billion USD": {
+        "telugu_title": "ఇన్ఫోసిస్ 1.5 బిలియన్ డాలర్ల విలువైన ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ కాంట్రాక్ట్‌",
+        "telugu_summary": "జెనరేటివ్ ఏఐ ఫ్రేమ్‌వర్క్‌లను ఉపయోగించి ఐటీ మౌలిక సదుపాయాలను ఆధునీకరించడానికి అంతర్జాతీయ సంస్థతో బహుళ సంవత్సరాల వ్యూహాత్మక భాగస్వామ్యాన్ని ఇన్ఫోసిస్ ప్రకటించింది.",
+        "key_facts": [
+            "డీల్ మొత్తం విలువ సుమారు 1.5 బిలియన్ డాలర్లు.",
+            "జెనరేటివ్ ఏఐ మరియు క్లౌడ్ ట్రాన్స్‌ఫర్మేషన్‌పై ఒప్పందం కేంద్రీకృతమై ఉంది.",
+            "భవిష్యత్ ఆదాయ వృద్ధికి ఇది బలమైన పునాది వేస్తుంది."
+        ],
+        "why_it_matters": "భారీ ఏఐ కాంట్రాక్టులు ఐటీ దిగ్గజాల ఆర్డర్ బుక్‌ను బలోపేతం చేయడమే కాక గ్లోబల్ మార్కెట్‌లో డిమాండ్‌ను చాటుతాయి.",
+        "market_impact": "Positive",
+        "market_impact_reason": "పెద్ద ఒప్పందాలు కంపెనీ రెవెన్యూ వృద్ధికి మరియు ఐటీ సెంటిమెంట్‌కు సానుకూలంగా ఉంటాయి."
+    },
+    "Reliance Industries Announces Major Expansion in Green Energy Manufacturing": {
+        "telugu_title": "గ్రీన్ ఎనర్జీ తయారీలో రిలయన్స్ భారీ విస్తరణ ప్రకటన",
+        "telugu_summary": "గుజరాత్‌లో సోలార్ గిగాఫ్యాక్టరీలు మరియు గ్రీన్ హైడ్రోజన్ ఉత్పత్తిలో పెట్టుబడులను వేగవంతం చేస్తున్నట్లు రిలయన్స్ ఇండస్ట్రీస్ వెల్లడించింది.",
+        "key_facts": [
+            "గుజరాత్‌లో అత్యాధునిక గ్రీన్ ఎనర్జీ తయారీ యూనిట్లు ఏర్పాటు.",
+            "సోలార్ ప్యానెల్స్ మరియు గ్రీన్ హైడ్రోజన్ ఉత్పత్తిపై ప్రత్యేక దృష్టి.",
+            "భారతదేశ స్వచ్ఛ ఇంధన లక్ష్యాలకు అనుగుణంగా భారీ పెట్టుబడులు."
+        ],
+        "why_it_matters": "భవిష్యత్ ఇంధన మార్కెట్లో అగ్రగామిగా నిలవడానికి రిలయన్స్ చేస్తున్న వ్యూహాత్మక అడుగు ఇది.",
+        "market_impact": "Positive",
+        "market_impact_reason": "భవిష్యత్ వృద్ధి రంగాలపై పెట్టుబడులు దీర్ఘకాలిక మదుపర్లలో విశ్వాసాన్ని పెంచుతాయి."
+    },
+    "RBI Keeps Repo Rate Unchanged at 6.5 Percent Citing Inflation Targets": {
+        "telugu_title": "ఆర్‌బీఐ రెపో రేటును 6.5 శాతంగా యథాతథంగా ఉంచింది",
+        "telugu_summary": "రిటైల్ ఆహార ద్రవ్యోల్బణాన్ని నిశితంగా పరిశీలిస్తూ వడ్డీ రేట్లను స్థిరంగా ఉంచాలని రిజర్వ్ బ్యాంక్ ఆఫ్ ఇండియా మానిటరీ పాలసీ కమిటీ ఏకగ్రీవంగా నిర్ణయించింది.",
+        "key_facts": [
+            "రెపో రేటు 6.5% వద్ద కొనసాగుతోంది.",
+            "ద్రవ్యోల్బణాన్ని 4% లక్ష్యానికి తీసుకురావడమే ప్రధాన ఉద్దేశం.",
+            "గృహ మరియు వాహన రుణ వడ్డీ రేట్లలో ప్రస్తుతానికి మార్పు ఉండదు."
+        ],
+        "why_it_matters": "వడ్డీ రేట్లు స్థిరంగా ఉండటం వల్ల గృహ కొనుగోలుదారులు మరియు ఆటోమొబైల్ రంగానికి ఊరట లభిస్తుంది.",
+        "market_impact": "Positive",
+        "market_impact_reason": "రేట్ల పెంపు లేకపోవడం వల్ల వ్యాపార కార్యకలాపాలు మరియు రుణ గ్రహీతలపై అదనపు భారం తప్పుతుంది."
+    }
 }
 
 WORD_MAP = {
@@ -56,40 +88,56 @@ WORD_MAP = {
     "quarterly": "త్రైమాసిక", "results": "ఫలితాలు", "report": "నివేదిక",
     "growth": "వృద్ధి", "high": "గరిష్టం", "low": "కనిష్టం",
     "india": "భారత్", "indian": "భారతీయ", "global": "ప్రపంచ",
-    "today": "ఈరోజు", "new": "కొత్త", "strong": "బలమైన", "prices": "ధరలు",
-    "demand": "డిమాండ్", "global": "ప్రపంచ"
+    "today": "ఈరోజు", "new": "కొత్త", "strong": "బలమైన", "prices": "ధరలు"
 }
 
 class TranslationService:
     @classmethod
-    async def translate_english_to_telugu(cls, text: str) -> tuple[str, str]:
-        if not text or not text.strip():
-            return "", ""
+    async def translate_english_to_telugu(cls, title: str, description: str = "") -> Tuple[str, str, List[str], str, str, str]:
+        if not title:
+            return "", "", [], "", "Positive", ""
 
-        text_clean = text.strip()
+        if title in RICH_NEWS_ANALYSIS:
+            item = RICH_NEWS_ANALYSIS[title]
+            return (
+                item["telugu_title"],
+                item["telugu_summary"],
+                item["key_facts"],
+                item["why_it_matters"],
+                item["market_impact"],
+                item["market_impact_reason"]
+            )
 
-        if text_clean in TELUGU_FINANCIAL_DICT:
-            val = TELUGU_FINANCIAL_DICT[text_clean]
-            if isinstance(val, tuple):
-                return val[0], val[1]
-            return val, f"{val}. ప్రపంచ ఆర్థిక మార్కెట్లలో దీని ప్రభావం సానుకూలంగా ఉండే అవకాశం ఉంది."
+        # Fuzzy lookup
+        for key, item in RICH_NEWS_ANALYSIS.items():
+            if key.lower() in title.lower() or title.lower() in key.lower():
+                return (
+                    item["telugu_title"],
+                    item["telugu_summary"],
+                    item["key_facts"],
+                    item["why_it_matters"],
+                    item["market_impact"],
+                    item["market_impact_reason"]
+                )
 
-        # Fuzzy or keyword match
-        for eng_key, tel_val in TELUGU_FINANCIAL_DICT.items():
-            if eng_key.lower() in text_clean.lower() or text_clean.lower() in eng_key.lower():
-                if isinstance(tel_val, tuple):
-                    return tel_val[0], tel_val[1]
-                return tel_val, f"{tel_val}. పెట్టుబడిదారుల సెంటిమెంట్ సానుకూలంగా ఉంది."
-
-        # Dynamic translation
+        # Dynamic fallback translation
         translated_words = []
-        for w in text_clean.split():
-            clean_w = w.lower().strip(".,;:!?\"'()")
-            if clean_w in WORD_MAP:
-                translated_words.append(WORD_MAP[clean_w])
+        for w in title.split():
+            cw = w.lower().strip(".,;:!?\"'()")
+            if cw in WORD_MAP:
+                translated_words.append(WORD_MAP[cw])
             else:
                 translated_words.append(w)
 
-        title_res = " ".join(translated_words)
-        desc_res = f"{title_res}. ఈ పరిణామం భారతీయ స్టాక్ మార్కెట్లు మరియు ఆర్థిక రంగాలపై ప్రభావం చూపనుంది."
-        return title_res, desc_res
+        t_res = " ".join(translated_words)
+        d_res = f"{description or title}. ఈ వార్త భారతీయ స్టాక్ మార్కెట్ మరియు ఆర్థిక రంగాలపై ప్రభావం చూపనుంది."
+        facts = [
+            f"అంశం: {t_res}",
+            "మార్కెట్ వర్గాల నుండి సానుకూల స్పందన లభిస్తోంది.",
+            "పెట్టుబడిదారులు ఈ పరిణామాన్ని నిశితంగా పరిశీలిస్తున్నారు."
+        ]
+        why = "ఈ పరిణామం సంబంధిత సెక్టార్‌లోని కంపెనీల పనితీరును మరియు మదుపర్ల పెట్టుబడులను ప్రభావితం చేస్తుంది."
+        impact = "Positive"
+        reason = "మార్కెట్ సెంటిమెంట్ మరియు ఆర్థిక ప్రాతిపదికన ఇది సానుకూల పరిణామంగా పరిగణించబడుతోంది."
+
+        return t_res, d_res, facts, why, impact, reason

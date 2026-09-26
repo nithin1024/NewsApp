@@ -116,7 +116,7 @@ fun NewsTeluguAppNavHost(
 
             // Secondary & Detail Screens
             composable("news_list/{category}") { backStackEntry ->
-                val cat = backStackEntry.arguments?.getString("category") ?: "Top Stories"
+                val cat = backStackEntry.arguments?.getString("category") ?: "STOCK MARKET"
                 NewsListScreen(
                     category = cat,
                     onNavigateToArticle = { articleId -> navController.navigate(Screen.ArticleDetails.createRoute(articleId)) },
@@ -131,6 +131,7 @@ fun NewsTeluguAppNavHost(
                 val articleId = backStackEntry.arguments?.getString("articleId") ?: ""
                 ArticleDetailsScreen(
                     articleId = articleId,
+                    onNavigateToStock = { symbol -> navController.navigate(Screen.StockDetails.createRoute(symbol)) },
                     onBack = { navController.popBackStack() }
                 )
             }

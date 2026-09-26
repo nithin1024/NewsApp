@@ -19,10 +19,9 @@ async def get_news(
 
     formatted_articles = []
     for art in raw_articles[:limit]:
-        tel_title, tel_desc = await TranslationService.translate_english_to_telugu(art["title"])
-        if not tel_desc or tel_desc == tel_title:
-            _, tel_desc = await TranslationService.translate_english_to_telugu(art["description"] or art["title"])
-
+        tel_title, tel_desc, key_facts, why_matters, m_impact, m_reason = await TranslationService.translate_english_to_telugu(
+            art["title"], art["description"]
+        )
         s_data = await SentimentService.analyze_article_sentiment(art["title"], art["description"])
 
         formatted_articles.append(NewsArticleSchema(
@@ -39,6 +38,10 @@ async def get_news(
             telugu_title=tel_title,
             telugu_description=tel_desc,
             telugu_summary=tel_desc,
+            key_facts=key_facts,
+            why_it_matters=why_matters,
+            market_impact=m_impact,
+            market_impact_reason=m_reason,
             sentiment=NewsSentimentSchema(
                 sentiment=s_data["sentiment"],
                 score=s_data["score"],
@@ -57,14 +60,16 @@ async def get_news(
 
 @router.get("/breaking", response_model=List[NewsArticleSchema])
 async def get_breaking_news():
-    raw_articles = await NewsDataService.fetch_latest_news(category="Stock Market")
+    raw_articles = await NewsDataService.fetch_latest_news(category="STOCK MARKET")
     breaking = [a for a in raw_articles if a.get("is_breaking")]
     if not breaking:
         breaking = raw_articles[:3]
 
     res = []
     for art in breaking:
-        tel_title, tel_desc = await TranslationService.translate_english_to_telugu(art["title"])
+        tel_title, tel_desc, key_facts, why_matters, m_impact, m_reason = await TranslationService.translate_english_to_telugu(
+            art["title"], art["description"]
+        )
         s_data = await SentimentService.analyze_article_sentiment(art["title"], art["description"])
         res.append(NewsArticleSchema(
             id=art["id"],
@@ -80,6 +85,10 @@ async def get_breaking_news():
             telugu_title=tel_title,
             telugu_description=tel_desc,
             telugu_summary=tel_desc,
+            key_facts=key_facts,
+            why_it_matters=why_matters,
+            market_impact=m_impact,
+            market_impact_reason=m_reason,
             sentiment=NewsSentimentSchema(
                 sentiment=s_data["sentiment"],
                 score=s_data["score"],
@@ -109,7 +118,9 @@ async def get_article_details(article_id: str):
         else:
             raise HTTPException(status_code=404, detail="Article not found")
 
-    tel_title, tel_desc = await TranslationService.translate_english_to_telugu(found["title"])
+    tel_title, tel_desc, key_facts, why_matters, m_impact, m_reason = await TranslationService.translate_english_to_telugu(
+        found["title"], found["description"]
+    )
     s_data = await SentimentService.analyze_article_sentiment(found["title"], found["description"])
 
     return NewsArticleSchema(
@@ -126,6 +137,10 @@ async def get_article_details(article_id: str):
         telugu_title=tel_title,
         telugu_description=tel_desc,
         telugu_summary=tel_desc,
+        key_facts=key_facts,
+        why_it_matters=why_matters,
+        market_impact=m_impact,
+        market_impact_reason=m_reason,
         sentiment=NewsSentimentSchema(
             sentiment=s_data["sentiment"],
             score=s_data["score"],

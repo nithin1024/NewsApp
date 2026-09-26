@@ -5,7 +5,7 @@ from datetime import datetime
 class NewsSentimentSchema(BaseModel):
     sentiment: str = "NEUTRAL"
     score: float = 0.0
-    market_relevance: str = "MEDIUM"
+    market_relevance: str = "HIGH"
     related_company: Optional[str] = None
     related_symbol: Optional[str] = None
     related_sector: Optional[str] = None
@@ -18,14 +18,18 @@ class NewsArticleSchema(BaseModel):
     source_name: str
     source_url: str
     image_url: Optional[str] = None
-    category: str
+    category: str  # STOCK MARKET, GLOBAL NEWS, or BUSINESS
     published_at: datetime
     is_breaking: bool = False
 
-    # Translation & Sentiment
+    # Telugu & Financial Analysis fields
     telugu_title: Optional[str] = None
     telugu_description: Optional[str] = None
     telugu_summary: Optional[str] = None
+    key_facts: List[str] = []
+    why_it_matters: Optional[str] = None
+    market_impact: Optional[str] = "Positive"
+    market_impact_reason: Optional[str] = None
     sentiment: Optional[NewsSentimentSchema] = None
 
     class Config:

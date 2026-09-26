@@ -8,12 +8,16 @@ data class NewsArticle(
     val sourceName: String,
     val sourceUrl: String,
     val imageUrl: String?,
-    val category: String,
+    val category: String, // STOCK MARKET, GLOBAL NEWS, BUSINESS
     val publishedAt: String,
     val isBreaking: Boolean = false,
     val teluguTitle: String?,
     val teluguDescription: String?,
     val teluguSummary: String?,
+    val keyFacts: List<String> = emptyList(),
+    val whyItMatters: String? = null,
+    val marketImpact: String? = "Positive",
+    val marketImpactReason: String? = null,
     val sentiment: NewsSentiment?
 )
 
@@ -107,7 +111,7 @@ data class TechnicalAlert(
 
 data class NotificationItem(
     val id: Int,
-    val type: String, // POSITIVE, NEGATIVE, NEUTRAL, BREAKING, PRICE, TECHNICAL, MARKET, WATCHLIST
+    val type: String,
     val title: String,
     val message: String,
     val articleId: String?,
@@ -117,9 +121,9 @@ data class NotificationItem(
 )
 
 data class UserPreferences(
-    val language: String = "telugu", // telugu or english
-    val theme: String = "system", // light, dark, system
-    val favoriteCategories: List<String> = listOf("Top Stories", "Markets", "Economy"),
+    val language: String = "telugu",
+    val theme: String = "system",
+    val favoriteCategories: List<String> = listOf("STOCK MARKET", "GLOBAL NEWS", "BUSINESS"),
     val favoriteCompanies: List<String> = listOf("RELIANCE", "INFY", "TCS"),
     val favoriteSectors: List<String> = listOf("Banking", "IT"),
     val notifyPositive: Boolean = true,

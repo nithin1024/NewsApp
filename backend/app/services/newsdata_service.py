@@ -6,35 +6,34 @@ from app.core.config import settings
 
 NEWSDATA_BASE_URL = "https://newsdata.io/api/1/news"
 
+VALID_CATEGORIES = ["STOCK MARKET", "GLOBAL NEWS", "BUSINESS"]
+
 class NewsDataService:
     @staticmethod
     def generate_article_id(title: str, url: str) -> str:
         content_hash = hashlib.sha256(f"{title}_{url}".encode("utf-8")).hexdigest()
         return content_hash[:16]
 
+    @staticmethod
+    def normalize_category(raw_cat: Optional[str], title: str) -> str:
+        t_lower = title.lower()
+        if "nifty" in t_lower or "sensex" in t_lower or "stock" in t_lower or "share" in t_lower or "market" in t_lower or "rbi" in t_lower or "bank" in t_lower:
+            return "STOCK MARKET"
+        elif "global" in t_lower or "us" in t_lower or "wall street" in t_lower or "fed" in t_lower or "asia" in t_lower or "europe" in t_lower or "oil" in t_lower or "gold" in t_lower:
+            return "GLOBAL NEWS"
+        else:
+            return "BUSINESS"
+
     @classmethod
     async def fetch_latest_news(cls, category: Optional[str] = None, query: Optional[str] = None) -> List[Dict[str, Any]]:
         api_key = settings.NEWSDATA_API_KEY
         params = {
             "country": "in",
-            "language": "en"
+            "language": "en",
+            "category": "business"
         }
         if api_key:
             params["apikey"] = api_key
-
-        if category:
-            cat_map = {
-                "India": "top",
-                "World": "world",
-                "Business": "business",
-                "Technology": "technology",
-                "Sports": "sports",
-                "Entertainment": "entertainment",
-                "Stock Market": "business",
-                "Banking": "business",
-                "Economy": "business"
-            }
-            params["category"] = cat_map.get(category, "business")
 
         if query:
             params["q"] = query
@@ -59,24 +58,27 @@ class NewsDataService:
                                 except Exception:
                                     pass
 
+                            norm_cat = cls.normalize_category(item.get("category"), title)
+                            if category and category.upper() != "ALL" and norm_cat != category.upper():
+                                continue
+
                             articles.append({
                                 "id": art_id,
                                 "provider_id": item.get("article_id"),
                                 "title": title,
                                 "description": item.get("description") or item.get("content") or title,
                                 "content": item.get("content") or item.get("description") or title,
-                                "source_name": item.get("source_id") or item.get("source_url") or "NewsSource",
+                                "source_name": item.get("source_id") or item.get("source_url") or "Financial Times",
                                 "source_url": url,
                                 "image_url": item.get("image_url"),
-                                "category": category or "Business",
+                                "category": norm_cat,
                                 "published_at": pub_dt,
-                                "is_breaking": False
+                                "is_breaking": "record" in title.lower() or "surge" in title.lower() or "crash" in title.lower()
                             })
             except Exception as e:
                 print(f"Error fetching from NewsData.io: {e}")
 
         if not articles:
-            # Fallback real news items when key is not configured or rate limited
             articles = cls.get_fallback_news(category=category, query=query)
 
         return articles
@@ -90,7 +92,7 @@ class NewsDataService:
                 "source_name": "Financial Express",
                 "source_url": "https://www.financialexpress.com/market/banking-stocks-rally",
                 "image_url": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f",
-                "category": "Banking",
+                "category": "STOCK MARKET",
                 "is_breaking": True
             },
             {
@@ -99,16 +101,16 @@ class NewsDataService:
                 "source_name": "Economic Times",
                 "source_url": "https://economictimes.indiatimes.com/markets/nifty-record-high",
                 "image_url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
-                "category": "Stock Market",
+                "category": "STOCK MARKET",
                 "is_breaking": True
             },
             {
-                "title": "RBI Keeps Repo Rate Unchanged at 6.5 Percent Citing Inflation Targets",
-                "description": "The Monetary Policy Committee of the Reserve Bank of India unanimously decided to hold interest rates steady while monitoring retail food inflation closely.",
-                "source_name": "Mint",
-                "source_url": "https://www.livemint.com/economy/rbi-mpc-policy-rate",
-                "image_url": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e",
-                "category": "Economy",
+                "title": "Global Markets Trading Mix as US Fed Signals Cautious Rate Cuts",
+                "description": "Asian and European stock indices posted mixed trading sessions following policy comments from Federal Reserve officials regarding interest rate trajectories.",
+                "source_name": "Reuters",
+                "source_url": "https://www.reuters.com/markets/global-markets-wrapup",
+                "image_url": "https://images.unsplash.com/photo-1535320903710-d993d3d77d29",
+                "category": "GLOBAL NEWS",
                 "is_breaking": False
             },
             {
@@ -117,7 +119,7 @@ class NewsDataService:
                 "source_name": "Business Standard",
                 "source_url": "https://www.business-standard.com/companies/infosys-deal",
                 "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475",
-                "category": "Technology",
+                "category": "BUSINESS",
                 "is_breaking": False
             },
             {
@@ -126,16 +128,16 @@ class NewsDataService:
                 "source_name": "ET Energy World",
                 "source_url": "https://energy.economictimes.indiatimes.com/news/renewable/reliance-green-energy",
                 "image_url": "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9",
-                "category": "Energy",
+                "category": "BUSINESS",
                 "is_breaking": False
             },
             {
-                "title": "Global Markets Trading Mix as US Fed Signals Cautious Rate Cuts",
-                "description": "Asian and European stock indices posted mixed trading sessions following policy comments from Federal Reserve officials regarding interest rate trajectories.",
-                "source_name": "Reuters",
-                "source_url": "https://www.reuters.com/markets/global-markets-wrapup",
-                "image_url": "https://images.unsplash.com/photo-1535320903710-d993d3d77d29",
-                "category": "World",
+                "title": "RBI Keeps Repo Rate Unchanged at 6.5 Percent Citing Inflation Targets",
+                "description": "The Monetary Policy Committee of the Reserve Bank of India unanimously decided to hold interest rates steady while monitoring retail food inflation closely.",
+                "source_name": "Mint",
+                "source_url": "https://www.livemint.com/economy/rbi-mpc-policy-rate",
+                "image_url": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e",
+                "category": "STOCK MARKET",
                 "is_breaking": False
             }
         ]
@@ -143,7 +145,7 @@ class NewsDataService:
         results = []
         for item in raw_items:
             cat = item["category"]
-            if category and category.lower() not in ["top stories", "latest news", cat.lower()]:
+            if category and category.upper() != "ALL" and cat.upper() != category.upper():
                 continue
             if query and query.lower() not in item["title"].lower() and query.lower() not in item["description"].lower():
                 continue
@@ -158,7 +160,7 @@ class NewsDataService:
                 "source_name": item["source_name"],
                 "source_url": item["source_url"],
                 "image_url": item["image_url"],
-                "category": item["category"],
+                "category": cat,
                 "published_at": datetime.utcnow(),
                 "is_breaking": item["is_breaking"]
             })

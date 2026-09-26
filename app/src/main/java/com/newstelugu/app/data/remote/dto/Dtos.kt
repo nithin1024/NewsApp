@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class NewsSentimentDto(
     @SerializedName("sentiment") val sentiment: String = "NEUTRAL",
     @SerializedName("score") val score: Float = 0f,
-    @SerializedName("market_relevance") val marketRelevance: String = "MEDIUM",
+    @SerializedName("market_relevance") val marketRelevance: String = "HIGH",
     @SerializedName("related_company") val relatedCompany: String? = null,
     @SerializedName("related_symbol") val relatedSymbol: String? = null,
     @SerializedName("related_sector") val relatedSector: String? = null
@@ -19,12 +19,16 @@ data class NewsArticleDto(
     @SerializedName("source_name") val sourceName: String = "NewsSource",
     @SerializedName("source_url") val sourceUrl: String,
     @SerializedName("image_url") val imageUrl: String? = null,
-    @SerializedName("category") val category: String = "General",
+    @SerializedName("category") val category: String = "STOCK MARKET",
     @SerializedName("published_at") val publishedAt: String,
     @SerializedName("is_breaking") val isBreaking: Boolean = false,
     @SerializedName("telugu_title") val teluguTitle: String? = null,
     @SerializedName("telugu_description") val teluguDescription: String? = null,
     @SerializedName("telugu_summary") val teluguSummary: String? = null,
+    @SerializedName("key_facts") val keyFacts: List<String> = emptyList(),
+    @SerializedName("why_it_matters") val whyItMatters: String? = null,
+    @SerializedName("market_impact") val marketImpact: String? = "Positive",
+    @SerializedName("market_impact_reason") val marketImpactReason: String? = null,
     @SerializedName("sentiment") val sentiment: NewsSentimentDto? = null
 )
 
