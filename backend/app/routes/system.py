@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from datetime import datetime
 from app.schemas.system import HealthCheckResponse, SystemStatusResponse, HomeFeedResponse
 from app.routes.news import get_news, get_breaking_news
@@ -22,16 +22,37 @@ async def get_system_status():
 
 @router.get("/api/v1/home", response_model=HomeFeedResponse)
 async def get_home_feed():
-    indian = await get_indian_markets()
-    globals_data = await get_global_markets()
-    breaking = await get_breaking_news()
-    latest = (await get_news(limit=10)).articles
+    try:
+        indian = await get_indian_markets()
+    except Exception as e:
+        print(f"Error loading indian markets: {e}")
+        indian = []
+
+    try:
+        globals_data = await get_global_markets()
+    except Exception as e:
+        print(f"Error loading global markets: {e}")
+        globals_data = []
+
+    try:
+        breaking = await get_breaking_news()
+    except Exception as e:
+        print(f"Error loading breaking news: {e}")
+        breaking = []
+
+    try:
+        latest = (await get_news(limit=10)).articles
+    except Exception as e:
+        print(f"Error loading latest news: {e}")
+        latest = []
 
     categories = ["Stock Market", "Business", "Banking", "Economy", "Technology"]
     cat_feed = {}
     for cat in categories:
-        cat_news = (await get_news(category=cat, limit=5)).articles
-        cat_feed[cat] = cat_news
+        try:
+            cat_feed[cat] = (await get_news(category=cat, limit=5)).articles
+        except Exception:
+            cat_feed[cat] = []
 
     return HomeFeedResponse(
         indian_markets=indian,
