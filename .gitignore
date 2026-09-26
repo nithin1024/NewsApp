@@ -1,0 +1,25 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Secrets and Credentials
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+serviceAccountKey.json
+firebase-adminsdk*.json
+*.pem
+*.key
+backend/serviceAccountKey.json
+backend/*.db
