@@ -18,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "DEFAULT_BASE_URL", "\"http://10.0.2.2:8000/\"")
+        buildConfigField("String", "DEFAULT_BASE_URL", "\"https://newstelugu-backend.onrender.com/\"")
     }
 
     buildTypes {
