@@ -30,7 +30,7 @@ fun GlobalSearchScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Global Search", fontWeight = FontWeight.Bold) },
+                title = { Text("Search Financial News", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -49,7 +49,7 @@ fun GlobalSearchScreen(
                 value = state.query,
                 onValueChange = { viewModel.onQueryChanged(it) },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search Stocks, Companies, News, Categories...") },
+                placeholder = { Text("Search Stock Market, Global News, Business...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 singleLine = true
             )
@@ -89,10 +89,7 @@ fun GlobalSearchScreen(
                 if (state.articles.isNotEmpty()) {
                     item { Text("📰 News Articles", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
                     items(state.articles) { article ->
-                        NewsCard(
-                            article = article,
-                            onClick = { onNavigateToArticle(article.id) }
-                        )
+                        NewsCard(article = article)
                     }
                 }
             }

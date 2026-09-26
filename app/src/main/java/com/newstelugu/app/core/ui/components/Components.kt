@@ -1,5 +1,8 @@
 package com.newstelugu.app.core.ui.components
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,13 +11,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,18 +29,21 @@ import com.newstelugu.app.domain.model.NewsArticle
 @Composable
 fun NewsCard(
     article: NewsArticle,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    var isExpanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick() },
+            .clickable { isExpanded = !isExpanded },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            // Category & Time & Sentiment Badge
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -60,7 +67,7 @@ fun NewsCard(
                         Icon(Icons.Default.Schedule, contentDescription = null, modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.outline)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "2 hours ago",
+                            text = "Just now",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -95,7 +102,7 @@ fun NewsCard(
                 text = article.title,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -107,26 +114,73 @@ fun NewsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                maxLines = 2,
+                maxLines = if (isExpanded) Int.MAX_VALUE else 2,
                 overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Telugu Description (Full Paragraph)
+            // Telugu Description / Summary
             article.teluguDescription?.let { summary ->
                 Text(
                     text = summary,
                     style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 3,
+                    maxLines = if (isExpanded) Int.MAX_VALUE else 3,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
                 )
             }
 
+            // EXPANDED COMPLETE DETAILS IN-PLACE
+            AnimatedVisibility(visible = isExpanded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Divider(color = MaterialTheme.colorScheme.outlineVariant)
+
+                    // Key Facts
+                    if (article.keyFacts.isNotEmpty()) {
+                        Text(text = "📌 ముఖ్యమైన అంశాలు (Key Facts):", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                        article.keyFacts.forEach { fact ->
+                            Text(text = "• $fact", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+
+                    // Why It Matters
+                    article.whyItMatters?.let { why ->
+                        Text(text = "💡 ఎందుకు ఇది ముఖ్యం? (Why It Matters):", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                        Text(text = why, style = MaterialTheme.typography.bodySmall)
+                    }
+
+                    // Market Impact
+                    article.marketImpactReason?.let { reason ->
+                        Text(text = "📊 మార్కెట్ ప్రభావం (Market Impact):", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                        Text(text = reason, style = MaterialTheme.typography.bodySmall)
+                    }
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Read Original Source Button inside card
+                    OutlinedButton(
+                        onClick = {
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(article.sourceUrl))
+                            context.startActivity(browserIntent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.OpenInBrowser, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Read Original Source (${article.sourceName})")
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Footer Stocks / Sector tags
+            // Footer Stocks / Sector tags & Expand hint
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -134,8 +188,8 @@ fun NewsCard(
             ) {
                 val stockSymbol = article.sentiment?.relatedSymbol
                 val sector = article.sentiment?.relatedSector
-                val stockText = if (!stockSymbol.isNullOrBlank()) "Stocks: $stockSymbol" else "Stocks: HDFC Bank, ICICI Bank"
-                val sectorText = if (!sector.isNullOrBlank()) "Sector: $sector" else "Sector: Banking"
+                val stockText = if (!stockSymbol.isNullOrBlank()) "Stocks: $stockSymbol" else "Stocks: NIFTY, Banking"
+                val sectorText = if (!sector.isNullOrBlank()) "Sector: $sector" else "Sector: Market"
 
                 Text(
                     text = "$stockText  |  $sectorText",
@@ -144,11 +198,11 @@ fun NewsCard(
                     fontWeight = FontWeight.Medium
                 )
 
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = "Details",
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.size(18.dp)
+                Text(
+                    text = if (isExpanded) "Show Less ▲" else "Read More ▼",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

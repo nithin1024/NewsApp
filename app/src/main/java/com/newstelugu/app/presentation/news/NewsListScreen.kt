@@ -54,10 +54,7 @@ fun NewsListScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(state.articles) { article ->
-                    NewsCard(
-                        article = article,
-                        onClick = { onNavigateToArticle(article.id) }
-                    )
+                    NewsCard(article = article)
                 }
             }
         }
