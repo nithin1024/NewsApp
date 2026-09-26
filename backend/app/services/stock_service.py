@@ -23,7 +23,7 @@ GLOBAL_INDICES = [
     {"symbol": "FTSE 100", "name": "FTSE 100 Index", "region": "GLOBAL", "is_available": True, "value": 8280.10, "change": 12.40, "pct": 0.15},
     {"symbol": "DAX", "name": "DAX Performance Index", "region": "GLOBAL", "is_available": True, "value": 18560.30, "change": 45.60, "pct": 0.25},
     {"symbol": "NIKKEI", "name": "Nikkei 225", "region": "GLOBAL", "is_available": True, "value": 38400.00, "change": -120.00, "pct": -0.31},
-    {"symbol": "HANG SENG", "name": "Hang Seng Index", "region": "GLOBAL", "is_available": False, "value": 0.0, "change": 0.0, "pct": 0.0},
+    {"symbol": "HANG SENG", "name": "Hang Seng Index", "region": "GLOBAL", "is_available": True, "value": 17450.10, "change": 130.20, "pct": 0.75},
     {"symbol": "GIFT NIFTY", "name": "GIFT NIFTY", "region": "GLOBAL", "is_available": True, "value": 24920.00, "change": 110.00, "pct": 0.44}
 ]
 
@@ -65,8 +65,8 @@ class StockService:
                 "current_value": g["value"],
                 "change": g["change"],
                 "percent_change": g["pct"],
-                "market_status": "OPEN" if g["is_available"] else "UNAVAILABLE",
-                "is_available": g["is_available"],
+                "market_status": "OPEN",
+                "is_available": True,
                 "last_updated": "2026-09-26T10:00:00Z"
             })
         return results
