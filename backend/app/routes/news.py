@@ -19,11 +19,10 @@ async def get_news(
 
     formatted_articles = []
     for art in raw_articles[:limit]:
-        # Perform automatic English -> Telugu translation
-        tel_title = await TranslationService.translate_english_to_telugu(art["title"])
-        tel_desc = await TranslationService.translate_english_to_telugu(art["description"])
+        tel_title, tel_desc = await TranslationService.translate_english_to_telugu(art["title"])
+        if not tel_desc or tel_desc == tel_title:
+            _, tel_desc = await TranslationService.translate_english_to_telugu(art["description"] or art["title"])
 
-        # Analyze sentiment
         s_data = await SentimentService.analyze_article_sentiment(art["title"], art["description"])
 
         formatted_articles.append(NewsArticleSchema(
@@ -65,8 +64,7 @@ async def get_breaking_news():
 
     res = []
     for art in breaking:
-        tel_title = await TranslationService.translate_english_to_telugu(art["title"])
-        tel_desc = await TranslationService.translate_english_to_telugu(art["description"])
+        tel_title, tel_desc = await TranslationService.translate_english_to_telugu(art["title"])
         s_data = await SentimentService.analyze_article_sentiment(art["title"], art["description"])
         res.append(NewsArticleSchema(
             id=art["id"],
@@ -111,8 +109,7 @@ async def get_article_details(article_id: str):
         else:
             raise HTTPException(status_code=404, detail="Article not found")
 
-    tel_title = await TranslationService.translate_english_to_telugu(found["title"])
-    tel_desc = await TranslationService.translate_english_to_telugu(found["description"])
+    tel_title, tel_desc = await TranslationService.translate_english_to_telugu(found["title"])
     s_data = await SentimentService.analyze_article_sentiment(found["title"], found["description"])
 
     return NewsArticleSchema(
